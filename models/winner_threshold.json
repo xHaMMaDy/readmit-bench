@@ -1,0 +1,20 @@
+{
+  "winner_model": "xgboost",
+  "calibrator": "uncalibrated",
+  "threshold": 0.032,
+  "cost_fn": 15000.0,
+  "cost_fp": 500.0,
+  "test_total_cost_usd": 47431500.0,
+  "test_cost_per_encounter_usd": 476.4399220523535,
+  "test_cost_always_treat_usd": 49777000.0,
+  "test_cost_never_treat_usd": 143325000.0,
+  "confusion": {
+    "tn": 12608,
+    "fp": 77391,
+    "fn": 273,
+    "tp": 9282
+  },
+  "test_n": 99554,
+  "test_n_pos": 9555,
+  "seed": 42
+}

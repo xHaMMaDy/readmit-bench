@@ -28,5 +28,5 @@ ENV PYTHONPATH=/app/src
 
 EXPOSE 7860
 
-# HF Spaces requires the app to listen on 0.0.0.0:7860.
-CMD ["uvicorn", "readmit_bench.api.main:app", "--host", "0.0.0.0", "--port", "7860"]
+# HF Spaces requires 0.0.0.0:7860; Render sets $PORT dynamically.
+CMD ["sh", "-c", "uvicorn readmit_bench.api.main:app --host 0.0.0.0 --port ${PORT:-7860}"]

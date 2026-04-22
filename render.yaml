@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: readmit-bench-dashboard
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile.flask
+    dockerContext: .
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: PYTHONPATH
+        value: /app/src
+
+  - type: web
+    name: readmit-bench-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: PYTHONPATH
+        value: /app/src
+      - key: READMIT_MODELS_DIR
+        value: /app/models
