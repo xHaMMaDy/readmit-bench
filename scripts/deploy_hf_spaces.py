@@ -83,14 +83,17 @@ def stage_flask(stage: Path) -> None:
     ]:
         src = REPO_ROOT / item
         if not src.exists():
+            print(f"  WARNING: {src} does not exist, skipping")
             continue
         dest = stage / item
         if src.is_dir():
+            print(f"  copying {src.name}/ ...")
             shutil.copytree(src, dest, ignore=shutil.ignore_patterns(
                 "__pycache__", "*.pyc", "*.parquet", "*.npz", "tuning",
                 "lime", "figures", "*.html", "*.gif", "*.png", "*.log",
             ))
         else:
+            print(f"  copying {src.name} ...")
             shutil.copy2(src, dest)
     shutil.copy2(REPO_ROOT / "Dockerfile.flask", stage / "Dockerfile")
     (stage / "README.md").write_text(FLASK_README, encoding="utf-8")
