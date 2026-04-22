@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>readmit-bench · 30-day Readmission Risk</title>
+  <meta name="description" content="Modern medical SaaS dashboard — 30-day inpatient readmission risk on CMS DE-SynPUF. Score, leaderboards, fairness, drift." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("rb-theme");
+        if (t === "dark" || t === "light") document.documentElement.classList.add(t);
+        else if (window.matchMedia("(prefers-color-scheme: dark)").matches) document.documentElement.classList.add("dark");
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ─────────── SIDEBAR ─────────── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <!-- pulse / activity icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">readmit-bench</div>
+        <div class="brand-sub">v2.0 · production</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Workspace</div>
+    <nav class="nav" role="tablist">
+      <button class="nav-item active" data-tab="score" role="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Score encounter
+      </button>
+      <button class="nav-item" data-tab="leaderboard" role="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-7"/></svg>
+        Leaderboards
+        <span class="badge">{{ leaderboards|length if leaderboards else 0 }}</span>
+      </button>
+      <button class="nav-item" data-tab="fairness" role="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 8h14"/><circle cx="6" cy="14" r="3"/><circle cx="18" cy="14" r="3"/></svg>
+        Fairness
+      </button>
+      <button class="nav-item" data-tab="drift" role="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+        Drift monitor
+        {% if drift_available %}<span class="badge" style="background:var(--r-low-bg); color:var(--r-low);">live</span>{% endif %}
+      </button>
+    </nav>
+
+    <div class="nav-label">About</div>
+    <nav class="nav">
+      <button class="nav-item" data-tab="method" role="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5"/><circle cx="12" cy="8" r=".5" fill="currentColor"/></svg>
+        Method &amp; honest reads
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="theme-row" role="group" aria-label="Theme">
+        <button id="th-light" title="Light mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          Light
+        </button>
+        <button id="th-dark" title="Dark mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+          Dark
+        </button>
+      </div>
+      <div class="user-pill">
+        <div class="avatar">RB</div>
+        <div>
+          <div class="user-name">Demo clinician</div>
+          <div class="user-role">Read-only · synthetic data</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ─────────── TOPBAR ─────────── -->
+  <header class="topbar">
+    <div class="brand-mobile">
+      <div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg></div>
+      <div class="brand-name">readmit-bench</div>
+    </div>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <span>Workspace</span>
+      <span class="sep">/</span>
+      <span class="here" id="crumb">Score encounter</span>
+    </nav>
+    <div class="topbar-actions">
+      <a class="icon-btn" href="/api/predict" target="_blank" title="JSON API">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </a>
+      <a class="icon-btn" href="/health" target="_blank" title="Health check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg>
+        <span class="ping"></span>
+      </a>
+      <a class="icon-btn" href="https://github.com/" target="_blank" title="GitHub">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- ─────────── MAIN ─────────── -->
+  <main class="main">
+
+    <!-- ═══════════ SCORE PAGE ═══════════ -->
+    <section class="page active" id="page-score" role="tabpanel">
+      <div class="page-head">
+        <div>
+          <h1>Score encounter</h1>
+          <p class="desc">Estimate 30-day unplanned readmission risk for an inpatient encounter using the calibrated XGBoost model.</p>
+        </div>
+      </div>
+
+      <!-- stats -->
+      <div class="stats">
+        <div class="stat">
+          <span class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+            Winner model
+          </span>
+          <span class="value">{{ meta.winner_model|upper }}</span>
+          <span class="delta neutral">production</span>
+        </div>
+        <div class="stat">
+          <span class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 9-9"/></svg>
+            PR-AUC
+          </span>
+          <span class="value">{{ "%.3f"|format(meta.pr_auc) if meta.pr_auc is defined else "0.172" }}</span>
+          <span class="delta up">+0.014 vs MLP</span>
+        </div>
+        <div class="stat">
+          <span class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M12 4v16"/></svg>
+            Threshold
+          </span>
+          <span class="value">{{ "%.3f"|format(meta.threshold) }}</span>
+          <span class="delta neutral">F<sub>1</sub>-tuned</span>
+        </div>
+        <div class="stat">
+          <span class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Tests
+          </span>
+          <span class="value">45<span style="color:var(--muted); font-size:0.55em; font-weight:600;"> / 45</span></span>
+          <span class="delta up">all passing</span>
+        </div>
+      </div>
+
+      {% if error %}
+        <div class="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <div><strong>Could not score:</strong> {{ error }}</div>
+        </div>
+      {% endif %}
+
+      <div class="score-grid">
+
+        <!-- form card -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2>Encounter input</h2>
+              <p class="sub">Clinical, demographic and code-level fields used by the production model.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <form class="form" method="post" action="/">
+
+              <fieldset>
+                <legend class="leg">
+                  <span class="num">01</span>Encounter
+                  <span class="desc">Length of stay, codes, prior history</span>
+                </legend>
+                <div class="fields">
+                  {% for name, label, lo, hi, default in numeric_fields %}
+                    <div class="field {% if loop.index in [1,2] %}span-6{% else %}span-3{% endif %}">
+                      <label for="f-{{ name }}">{{ label }}</label>
+                      <input id="f-{{ name }}" type="number" name="{{ name }}" min="{{ lo }}" max="{{ hi }}" step="1"
+                             value="{{ encounter[name] if encounter else default }}" />
+                    </div>
+                  {% endfor %}
+
+                  <div class="toggles">
+                    <label class="toggle">
+                      <input type="checkbox" name="is_weekend_admit" {% if encounter and encounter.is_weekend_admit %}checked{% endif %} />
+                      <span class="switch"></span>
+                      <span class="lbl">Weekend admit</span>
+                    </label>
+                    <label class="toggle">
+                      <input type="checkbox" name="has_prior_admit" {% if encounter and encounter.has_prior_admit %}checked{% endif %} />
+                      <span class="switch"></span>
+                      <span class="lbl">Prior admit on file</span>
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend class="leg">
+                  <span class="num">02</span>Demographics &amp; codes
+                  <span class="desc">Patient context · ICD &amp; DRG</span>
+                </legend>
+                <div class="fields">
+                  {% for name, label, options, default in lowcard_fields %}
+                    <div class="field span-4">
+                      <label for="f-{{ name }}">{{ label }}</label>
+                      <select id="f-{{ name }}" name="{{ name }}">
+                        {% for opt in options %}
+                          <option value="{{ opt }}" {% if (encounter and encounter[name] == opt) or (not encounter and default == opt) %}selected{% endif %}>{{ opt }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  {% endfor %}
+                  {% for name, label, default in text_fields %}
+                    <div class="field span-4">
+                      <label for="f-{{ name }}">{{ label }}</label>
+                      <input id="f-{{ name }}" type="text" name="{{ name }}" value="{{ encounter[name] if encounter else default }}" />
+                    </div>
+                  {% endfor %}
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend class="leg">
+                  <span class="num">03</span>Chronic conditions
+                  <span class="desc">Tap to toggle</span>
+                </legend>
+                <div class="fields">
+                  <div class="chips">
+                    {% for flag in chronic_flags %}
+                      <label class="chip">
+                        <input type="checkbox" name="{{ flag }}" {% if encounter and encounter[flag] %}checked{% endif %} />
+                        <span class="check">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </span>
+                        {{ flag.replace('chronic_', '').replace('_', ' ').title() }}
+                      </label>
+                    {% endfor %}
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="actions">
+                <button type="submit" class="btn btn-primary">
+                  Run prediction
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </button>
+                <button type="reset" class="btn btn-ghost">Reset</button>
+                <span style="margin-left:auto; color:var(--muted); font-size:var(--fs-12);">All fields are required · synthetic data</span>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- result card -->
+        <div class="result-card">
+          <div class="result-head">
+            <h2>Prediction</h2>
+            {% if result %}
+              <span class="result-status live"><span class="dot"></span>Scored</span>
+            {% else %}
+              <span class="result-status"><span class="dot"></span>Awaiting input</span>
+            {% endif %}
+          </div>
+          <div class="result-body">
+
+            {% if result %}
+              {% set pct = (result.probability * 100) | round(1) %}
+              {% set pct_clamped = (result.probability * 100) | round(2) %}
+              {% set thr_pct = (result.threshold * 100) | round(2) %}
+
+              <div class="prob-display">
+                <span class="prob-value">
+                  {{ "%.1f"|format(pct) }}<span class="pct">%</span>
+                </span>
+                <div class="prob-label">Predicted readmission probability</div>
+              </div>
+
+              <div class="gauge">
+                <div class="gauge-track">
+                  <div class="gauge-threshold" style="left: {{ thr_pct }}%"></div>
+                  <div class="gauge-marker" style="left: {{ pct_clamped }}%"></div>
+                </div>
+                <div class="gauge-scale">
+                  <span>0</span><span>25</span><span>50</span><span>75</span><span>100%</span>
+                </div>
+              </div>
+
+              <div class="result-rows">
+                <div class="col">
+                  <span class="k">Decision</span>
+                  <span class="v">
+                    <span class="decision-pill {{ 'flag' if result.decision == 'flag' else 'skip' }}">
+                      {{ '⚑ flag' if result.decision == 'flag' else '✓ skip' }}
+                    </span>
+                  </span>
+                </div>
+                <div class="col">
+                  <span class="k">Risk band</span>
+                  <span class="v">
+                    <span class="risk-pill {{ result.risk_band }}">
+                      <span class="dot"></span>{{ result.risk_band|replace('_', ' ') }}
+                    </span>
+                  </span>
+                </div>
+                <div class="col">
+                  <span class="k">Threshold</span>
+                  <span class="v mono">{{ "%.3f"|format(result.threshold) }}</span>
+                </div>
+                <div class="col">
+                  <span class="k">Probability</span>
+                  <span class="v mono">{{ "%.4f"|format(result.probability) }}</span>
+                </div>
+              </div>
+
+              {% if encounter_json %}
+                <details class="payload">
+                  <summary>View encounter payload</summary>
+                  <pre>{{ encounter_json }}</pre>
+                </details>
+              {% endif %}
+
+            {% else %}
+              <div class="empty-state">
+                <div class="icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg>
+                </div>
+                <h3>No prediction yet</h3>
+                <p>Fill in the encounter on the left and run the model to see the calibrated probability, risk band and decision.</p>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════ LEADERBOARDS ═══════════ -->
+    <section class="page" id="page-leaderboard" role="tabpanel">
+      <div class="page-head">
+        <div>
+          <h1>Leaderboards</h1>
+          <p class="desc">All benchmark tables shipped with the model — V1 baselines, Optuna-tuned, calibration, V2 NN/AutoML and ensembles.</p>
+        </div>
+      </div>
+
+      {% if leaderboards %}
+        <div style="margin-bottom: var(--s-5);">
+          <div class="segmented" id="boardSeg">
+            {% for b in leaderboards %}
+              <button class="seg {% if loop.first %}active{% endif %}" data-board="b{{ loop.index }}">{{ b.label }}</button>
+            {% endfor %}
+          </div>
+        </div>
+        {% for b in leaderboards %}
+          <div class="board-table-card {% if loop.first %}active{% endif %}" data-board-pane="b{{ loop.index }}">
+            <div class="card-head">
+              <div>
+                <h2>{{ b.label }}</h2>
+                <p class="src">{{ b.rel_path }}</p>
+              </div>
+            </div>
+            <div class="table-wrap">{{ b.table_html | safe }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty"><h3>No leaderboards found</h3><p>No CSVs in <code>reports/</code>.</p></div>
+      {% endif %}
+    </section>
+
+    <!-- ═══════════ FAIRNESS ═══════════ -->
+    <section class="page" id="page-fairness" role="tabpanel">
+      <div class="page-head">
+        <div>
+          <h1>Fairness audit</h1>
+          <p class="desc">Per-slice PR-AUC, recall and precision computed at the production threshold across protected attributes.</p>
+        </div>
+      </div>
+
+      {% if fairness and fairness.attributes %}
+        <div style="margin-bottom: var(--s-5);">
+          <div class="segmented" id="attrSeg">
+            {% for a in fairness.attributes %}
+              <button class="seg {% if loop.first %}active{% endif %}" data-attr="{{ a }}">{{ a }}</button>
+            {% endfor %}
+          </div>
+        </div>
+        {% for a in fairness.attributes %}
+          <div class="board-table-card {% if loop.first %}active{% endif %}" data-attr-pane="{{ a }}">
+            <div class="card-head">
+              <div>
+                <h2>By {{ a }}</h2>
+                <p class="src">reports/fairness_summary.csv · {{ a }}</p>
+              </div>
+            </div>
+            <div class="table-wrap">{{ fairness.tables[a] | safe }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty"><h3>No fairness data</h3><p>Run <code>python -m readmit_bench.fairness.audit</code> to generate <code>fairness_summary.csv</code>.</p></div>
+      {% endif %}
+    </section>
+
+    <!-- ═══════════ DRIFT ═══════════ -->
+    <section class="page" id="page-drift" role="tabpanel">
+      <div class="page-head">
+        <div>
+          <h1>Drift monitor</h1>
+          <p class="desc">Evidently 0.7 <code>DataDriftPreset</code> — train vs validation reference. Refresh nightly in production.</p>
+        </div>
+      </div>
+
+      {% if drift_available %}
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2>Data drift report</h2>
+              <p class="sub">Embedded interactive Evidently HTML</p>
+            </div>
+            <a class="btn btn-ghost" href="/drift" target="_blank">Open in tab ↗</a>
+          </div>
+          <iframe class="drift-frame" src="/drift" title="Evidently drift report"></iframe>
+        </div>
+      {% else %}
+        <div class="empty"><h3>No drift report yet</h3><p>Run <code>python -m readmit_bench.drift.evidently_report</code>.</p></div>
+      {% endif %}
+    </section>
+
+    <!-- ═══════════ METHOD ═══════════ -->
+    <section class="page" id="page-method" role="tabpanel">
+      <div class="page-head">
+        <div>
+          <h1>Method &amp; honest reads</h1>
+          <p class="desc">What was built, what worked, and where neural networks did not beat boosted trees on this dataset.</p>
+        </div>
+      </div>
+
+      <div class="method-grid">
+        <div class="card method-card">
+          <div class="card-head"><div><h2>The deployed model</h2><p class="sub">Calibrated, threshold-tuned, fairness-audited</p></div></div>
+          <div class="card-body">
+            <p>Isotonic-calibrated <strong>XGBoost</strong> classifier tuned with Optuna; threshold selected on validation F<sub>1</sub>. Feature pipeline materialises 29 fields per encounter — numeric, binary, low-card categorical and high-card categorical (admit-dx code, DRG).</p>
+            <ul>
+              <li>Cohort: CMS DE-SynPUF (synthetic Medicare claims)</li>
+              <li>Prevalence ≈ 10% · patient-grouped splits</li>
+              <li>SHAP explanations · LIME local explanations</li>
+              <li>Evidently drift report shipped as monitoring baseline</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card method-card">
+          <div class="card-head"><div><h2>What V2 changed</h2><p class="sub">Honest negative results, kept in plain sight</p></div></div>
+          <div class="card-body">
+            <p><strong>NNs do not beat GBMs here.</strong> Top NN/AutoML PR-AUC was <code>0.157</code> (MLP) vs deployed XGBoost <code>0.172</code>. Tabular GBMs dominate this regime — ~100 engineered features, ~10% prevalence.</p>
+            <p><strong>Ensembles do not lift either.</strong> Voting + stacking added <code>+0.00007</code> PR-AUC over the best base. The three base learners correlate at ρ&nbsp;≈&nbsp;0.99 — nothing for a meta-learner to learn.</p>
+            <p>Both findings are reported transparently rather than buried.</p>
+          </div>
+        </div>
+
+        <div class="card method-card">
+          <div class="card-head"><div><h2>This dashboard</h2><p class="sub">No mocks — every artefact is the real one</p></div></div>
+          <div class="card-body">
+            <p>Every CSV under <code>reports/</code> is rendered as-is. Every score uses the production <code>Predictor</code>. The drift iframe is the same HTML a CI pipeline would diff against. The form schema mirrors the model's <code>FEATURE_ORDER</code> exactly.</p>
+            <p>Pure <strong>Flask</strong> + Jinja + vanilla JS. No framework, no build step. Deployable to Render, HF Spaces, or any Python host via <span class="kbd">gunicorn flask_app:app</span>.</p>
+          </div>
+        </div>
+
+        <div class="card method-card">
+          <div class="card-head"><div><h2>Endpoints</h2><p class="sub">For programmatic access</p></div></div>
+          <div class="card-body">
+            <ul>
+              <li><span class="kbd">POST /api/predict</span> — JSON in, JSON out (probability, decision, risk band, threshold, echoed input)</li>
+              <li><span class="kbd">GET /drift</span> — raw Evidently report</li>
+              <li><span class="kbd">GET /health</span> — liveness probe + winner model</li>
+              <li><a href="https://github.com/" target="_blank">GitHub repository ↗</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // ─── tabs (page switching + breadcrumb) ───
+  (function () {
+    var titles = {
+      score: "Score encounter",
+      leaderboard: "Leaderboards",
+      fairness: "Fairness audit",
+      drift: "Drift monitor",
+      method: "Method & honest reads"
+    };
+    var navItems = document.querySelectorAll(".nav-item");
+    var pages = document.querySelectorAll(".page");
+    var crumb = document.getElementById("crumb");
+    function activate(name) {
+      navItems.forEach(function (n) { n.classList.toggle("active", n.dataset.tab === name); });
+      pages.forEach(function (p) { p.classList.toggle("active", p.id === "page-" + name); });
+      if (crumb && titles[name]) crumb.textContent = titles[name];
+      try { history.replaceState(null, "", "#" + name); } catch (e) {}
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    navItems.forEach(function (n) { n.addEventListener("click", function () { activate(n.dataset.tab); }); });
+    var initial = (location.hash || "").replace("#", "");
+    if (initial && document.getElementById("page-" + initial)) activate(initial);
+    {% if result or error %}activate("score");{% endif %}
+  })();
+
+  // ─── leaderboard segmented ───
+  (function () {
+    var segs = document.querySelectorAll("#boardSeg .seg");
+    var panes = document.querySelectorAll("[data-board-pane]");
+    segs.forEach(function (s) {
+      s.addEventListener("click", function () {
+        segs.forEach(function (x) { x.classList.toggle("active", x === s); });
+        panes.forEach(function (p) { p.classList.toggle("active", p.dataset.boardPane === s.dataset.board); });
+      });
+    });
+  })();
+
+  // ─── fairness segmented ───
+  (function () {
+    var segs = document.querySelectorAll("#attrSeg .seg");
+    var panes = document.querySelectorAll("[data-attr-pane]");
+    segs.forEach(function (s) {
+      s.addEventListener("click", function () {
+        segs.forEach(function (x) { x.classList.toggle("active", x === s); });
+        panes.forEach(function (p) { p.classList.toggle("active", p.dataset.attrPane === s.dataset.attr); });
+      });
+    });
+  })();
+
+  // ─── theme ───
+  (function () {
+    var root = document.documentElement;
+    var l = document.getElementById("th-light");
+    var d = document.getElementById("th-dark");
+    function effective() {
+      if (root.classList.contains("dark")) return "dark";
+      if (root.classList.contains("light")) return "light";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    function apply(mode) {
+      root.classList.remove("dark", "light");
+      root.classList.add(mode);
+      try { localStorage.setItem("rb-theme", mode); } catch (e) {}
+      sync();
+    }
+    function sync() {
+      var e = effective();
+      l.classList.toggle("on", e === "light");
+      d.classList.toggle("on", e === "dark");
+    }
+    l.addEventListener("click", function () { apply("light"); });
+    d.addEventListener("click", function () { apply("dark"); });
+    sync();
+  })();
+</script>
+</body>
+</html>

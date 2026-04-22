@@ -1,0 +1,29 @@
+{
+  "sex": {
+    "demographic_parity_difference": 0.0007906654253239109,
+    "equalized_odds_difference": 0.0018902776785076902,
+    "fnr_max": 0.029647630619684083,
+    "fnr_min": 0.02775735294117647,
+    "fnr_gap": 0.001890277678507614,
+    "worst_fnr_slice": "Male",
+    "best_fnr_slice": "Female"
+  },
+  "race": {
+    "demographic_parity_difference": 0.04548584758529306,
+    "equalized_odds_difference": 0.04727923158711145,
+    "fnr_max": 0.039473684210526314,
+    "fnr_min": 0.009523809523809525,
+    "fnr_gap": 0.02994987468671679,
+    "worst_fnr_slice": "Other",
+    "best_fnr_slice": "Hispanic"
+  },
+  "age_bin": {
+    "demographic_parity_difference": 0.051043829213281544,
+    "equalized_odds_difference": 0.052962250155507706,
+    "fnr_max": 0.034703504043126686,
+    "fnr_min": 0.017875920084121977,
+    "fnr_gap": 0.01682758395900471,
+    "worst_fnr_slice": "65-74",
+    "best_fnr_slice": "85+"
+  }
+}

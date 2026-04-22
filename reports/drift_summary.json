@@ -1,0 +1,347 @@
+{
+  "metrics": [
+    {
+      "id": "15e89f895b482f9b84ba7274ed18a106",
+      "metric_name": "DriftedColumnsCount(drift_share=0.5)",
+      "config": {
+        "type": "evidently:metric_v2:DriftedColumnsCount",
+        "drift_share": 0.5
+      },
+      "value": {
+        "count": 1.0,
+        "share": 0.03333333333333333
+      }
+    },
+    {
+      "id": "51b4195ab6121ef61509e5aa4ab1e2ed",
+      "metric_name": "ValueDrift(column=los_days,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "los_days",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.00707885525654835
+    },
+    {
+      "id": "1d2291d2f3d87744e38639243c56ca62",
+      "metric_name": "ValueDrift(column=age_at_admit,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "age_at_admit",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.0087083971458766
+    },
+    {
+      "id": "ddc6718f04fa2da9a7ee6e6f5aa9c3a7",
+      "metric_name": "ValueDrift(column=num_diagnoses,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "num_diagnoses",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.006112509666776022
+    },
+    {
+      "id": "4c66fcf3bc3fac07c1849bf5f32083d3",
+      "metric_name": "ValueDrift(column=num_procedures,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "num_procedures",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.0045765387757007335
+    },
+    {
+      "id": "a1075691928d8c606b066f276112e96c",
+      "metric_name": "ValueDrift(column=prior_6mo_inpatient_count,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "prior_6mo_inpatient_count",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.0038277963893802573
+    },
+    {
+      "id": "3e9ad26a5cce4ce42f7341d047bfc542",
+      "metric_name": "ValueDrift(column=days_since_last_discharge_imputed,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "days_since_last_discharge_imputed",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.0038196968108551374
+    },
+    {
+      "id": "18a180457ee978a3745cf05046acb15a",
+      "metric_name": "ValueDrift(column=chronic_count,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_count",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.006906141254069563
+    },
+    {
+      "id": "ce558daf4d037a2e5cf41b7c0fbd3c36",
+      "metric_name": "ValueDrift(column=admit_month,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "admit_month",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.003864059433486288
+    },
+    {
+      "id": "34e692ead29db4cc885d41a68f7cdfe3",
+      "metric_name": "ValueDrift(column=admit_dow,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "admit_dow",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.00901634436278754
+    },
+    {
+      "id": "a9f79f3bbe7bfad1f251712dbb2f0fe6",
+      "metric_name": "ValueDrift(column=is_weekend_admit,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "is_weekend_admit",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0031176227720035874
+    },
+    {
+      "id": "aba13da124cc021fd82c0bfc522e76a8",
+      "metric_name": "ValueDrift(column=has_prior_admit,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "has_prior_admit",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0013422635672507446
+    },
+    {
+      "id": "4405f5c658c7de8f1c3824423b798cdf",
+      "metric_name": "ValueDrift(column=chronic_alzheimer,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_alzheimer",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0038042720006702816
+    },
+    {
+      "id": "95a5eca0e8439907149058b0465cea63",
+      "metric_name": "ValueDrift(column=chronic_chf,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_chf",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.001702443352576204
+    },
+    {
+      "id": "3abb47765c593059775828b0e7e148ec",
+      "metric_name": "ValueDrift(column=chronic_ckd,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_ckd",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0017764796697547901
+    },
+    {
+      "id": "36dc851c8fa378f6d1f77bf0d88419e2",
+      "metric_name": "ValueDrift(column=chronic_cancer,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_cancer",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.00032422101355265485
+    },
+    {
+      "id": "260665b37ac6a7453bdbc82e2a5a7ef6",
+      "metric_name": "ValueDrift(column=chronic_copd,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_copd",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.001881180206671313
+    },
+    {
+      "id": "2c9a87c5c7c59e37b6a7b268cdf5b13a",
+      "metric_name": "ValueDrift(column=chronic_depression,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_depression",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0022628487768207414
+    },
+    {
+      "id": "f14c7016863ecd47d13d898866c61c02",
+      "metric_name": "ValueDrift(column=chronic_diabetes,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_diabetes",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0008986182354089786
+    },
+    {
+      "id": "07e2b4940511030a3d3cffc6dfda9b44",
+      "metric_name": "ValueDrift(column=chronic_ihd,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_ihd",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.000743482434275867
+    },
+    {
+      "id": "f754bb30f876bd281794d4e1abd6d819",
+      "metric_name": "ValueDrift(column=chronic_osteoporosis,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_osteoporosis",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.002463561837735417
+    },
+    {
+      "id": "9a448bd2f4b338684998c34c687aa135",
+      "metric_name": "ValueDrift(column=chronic_ra_oa,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_ra_oa",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0007920244886611285
+    },
+    {
+      "id": "35e5047d144a9caeecd45af476fbbebc",
+      "metric_name": "ValueDrift(column=chronic_stroke,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "chronic_stroke",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0030439902445861056
+    },
+    {
+      "id": "06aa6ab7a37743466fbc9323004b671c",
+      "metric_name": "ValueDrift(column=state_code,method=Wasserstein distance (normed),threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "state_code",
+        "method": "Wasserstein distance (normed)",
+        "threshold": 0.1
+      },
+      "value": 0.00881132044676024
+    },
+    {
+      "id": "90a8424fb646093a8270c5d931ae12e1",
+      "metric_name": "ValueDrift(column=y,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "y",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0031625576043579507
+    },
+    {
+      "id": "0035077d83a7ff4006d92ad94db5827b",
+      "metric_name": "ValueDrift(column=sex,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "sex",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.002728827165156501
+    },
+    {
+      "id": "5640421de22a5b374a51973d00574bcf",
+      "metric_name": "ValueDrift(column=race,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "race",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.0037631941783115358
+    },
+    {
+      "id": "1d861bdc7fa8fb33797e7fce770cc672",
+      "metric_name": "ValueDrift(column=age_bin,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "age_bin",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.002677601849370646
+    },
+    {
+      "id": "2c3aa8885054f3f7b056137127336f4e",
+      "metric_name": "ValueDrift(column=admit_dx_chapter,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "admit_dx_chapter",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.008621113034287994
+    },
+    {
+      "id": "b6f55ea1106729aa8759f132ffca7dde",
+      "metric_name": "ValueDrift(column=admit_dx_code,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "admit_dx_code",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.12400593678596261
+    },
+    {
+      "id": "a173e4baadd6ed3614a4ca204be5de29",
+      "metric_name": "ValueDrift(column=drg_code,method=Jensen-Shannon distance,threshold=0.1)",
+      "config": {
+        "type": "evidently:metric_v2:ValueDrift",
+        "column": "drg_code",
+        "method": "Jensen-Shannon distance",
+        "threshold": 0.1
+      },
+      "value": 0.05997307116785518
+    }
+  ],
+  "tests": []
+}

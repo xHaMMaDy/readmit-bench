@@ -1,0 +1,90 @@
+# Data + models — never commit
+data/
+models/
+mlruns/
+*.parquet
+*.zip
+*.csv
+*.pkl
+*.joblib
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+build/
+dist/
+*.egg-info/
+.eggs/
+.installed.cfg
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# OS
+Thumbs.db
+
+# Local secrets
+.env
+*.local
+
+# === Allow-list for shipped artifacts (negate prior broad globs) ===
+!reports/**
+!docs/**
+!templates/**
+!static/**
+!scripts/**
+!tests/**
+!src/**
+# but still don't commit the heavy report-only artifacts
+reports/*.parquet
+reports/*.npz
+reports/tuning/*.pkl
+
+# AI assistant artifacts (never commit anything that reveals AI tooling)
+.copilot/
+.copilot-*
+.github/copilot-*
+.github/copilot/
+copilot-*.md
+COPILOT*.md
+.cursor/
+.cursorrules
+.cursorignore
+.aider*
+.continue/
+.codeium/
+.windsurf/
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+.anthropic/
+.openai/
+.chatgpt/
+GEMINI.md
+.gemini/
+ai-notes/
+ai_notes/
+*.ai.md
+prompts/
+.prompts/

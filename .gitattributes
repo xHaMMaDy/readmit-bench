@@ -1,0 +1,8 @@
+reports/demo.gif filter=lfs diff=lfs merge=lfs -text
+reports/dashboard.png filter=lfs diff=lfs merge=lfs -text
+reports/drift_report.html filter=lfs diff=lfs merge=lfs -text
+reports/report.html filter=lfs diff=lfs merge=lfs -text
+reports/report.html !text !filter !merge !diff
+reports/demo.gif !text !filter !merge !diff
+reports/dashboard.png !text !filter !merge !diff
+reports/drift_report.html !text !filter !merge !diff

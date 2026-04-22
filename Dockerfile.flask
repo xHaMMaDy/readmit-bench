@@ -1,0 +1,29 @@
+# readmit-bench Flask dashboard — Hugging Face Space (sdk: docker) / Render / generic
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PYTHONPATH=/app/src \
+    PORT=7860
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements-flask.txt ./requirements-flask.txt
+RUN pip install --upgrade pip && pip install -r requirements-flask.txt
+
+COPY src ./src
+COPY models ./models
+COPY reports ./reports
+COPY templates ./templates
+COPY static ./static
+COPY flask_app.py ./flask_app.py
+
+EXPOSE 7860
+
+CMD ["sh", "-c", "gunicorn flask_app:app --bind 0.0.0.0:${PORT:-7860} --workers 2 --timeout 60"]

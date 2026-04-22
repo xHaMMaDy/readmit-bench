@@ -1,0 +1,42 @@
+C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\mlflow\tracking\_tracking_service\utils.py:184: FutureWarning: The filesystem tracking backend (e.g., './mlruns') is deprecated as of February 2026. Consider transitioning to a database backend (e.g., 'sqlite:///mlflow.db') to take advantage of the latest MLflow features. See https://mlflow.org/docs/latest/self-hosting/migrate-from-file-store for migration guidance.
+  return FileStore(store_uri, store_uri)
+12:56:38 | INFO    | loaded — train 927893  val 198597  pos rate 0.096 / 0.096
+12:56:39 | INFO    | subsample → 100320 rows (pos rate 0.096)
+12:56:40 | INFO    | preprocessed dense matrices — train (100320, 105)  val (198597, 105)
+12:56:40 | INFO    | [mlp] fit on 100320 rows × 105 features
+12:56:43 | INFO    | MLP epoch 1/8  train_loss=1.2128  val_loss=1.1938
+12:56:44 | INFO    | MLP epoch 2/8  train_loss=1.1637  val_loss=1.1590
+12:56:46 | INFO    | MLP epoch 3/8  train_loss=1.1515  val_loss=1.1619
+12:56:48 | INFO    | MLP epoch 4/8  train_loss=1.1439  val_loss=1.1541
+12:56:50 | INFO    | MLP epoch 5/8  train_loss=1.1355  val_loss=1.1529
+12:56:52 | INFO    | MLP epoch 6/8  train_loss=1.1304  val_loss=1.1571
+12:56:54 | INFO    | MLP epoch 7/8  train_loss=1.1215  val_loss=1.1518
+12:56:55 | INFO    | MLP epoch 8/8  train_loss=1.1121  val_loss=1.1509
+12:56:56 | INFO    | [mlp] PR-AUC=0.1573 ROC-AUC=0.6665 Brier=0.2174 recall@10%=0.195  fit=15.7s predict=0.14s
+12:56:56 | INFO    | [tabnet] fit on 100320 rows × 105 features
+C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\pytorch_tabnet\callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+12:57:29 | INFO    | [tabnet] PR-AUC=0.1532 ROC-AUC=0.6620 Brier=0.0847 recall@10%=0.185  fit=29.7s predict=3.06s
+12:57:29 | INFO    | [ft_transformer] fit on 100320 rows × 105 features
+13:00:43 | INFO    | FT-T epoch 1/6  train_loss=1.2164  val_loss=1.1640
+13:03:55 | INFO    | FT-T epoch 2/6  train_loss=1.1658  val_loss=1.1476
+13:07:03 | INFO    | FT-T epoch 3/6  train_loss=1.1544  val_loss=1.1359
+13:10:33 | INFO    | FT-T epoch 4/6  train_loss=1.1226  val_loss=1.1169
+13:14:11 | INFO    | FT-T epoch 5/6  train_loss=1.1121  val_loss=1.1010
+13:17:46 | INFO    | FT-T epoch 6/6  train_loss=1.0982  val_loss=1.1222
+13:18:46 | INFO    | [ft_transformer] PR-AUC=0.1534 ROC-AUC=0.6619 Brier=0.2163 recall@10%=0.186  fit=1216.9s predict=59.19s
+13:18:46 | INFO    | [flaml_automl] fit on 100320 rows × 105 features
+13:18:46 | INFO    | FLAML fit — budget=300s, estimators=['lgbm', 'xgboost', 'rf', 'extra_tree', 'lrl2'], metric=ap
+13:18:49 | INFO    | No low-cost partial config given to the search algorithm. For cost-frugal search, consider providing low-cost values for cost-related hps via 'low_cost_partial_config'. More info can be found at https://microsoft.github.io/FLAML/docs/FAQ#about-low_cost_partial_config-in-tune
+13:23:47 | INFO    | FLAML best=xgboost  config={'n_estimators': 43, 'max_leaves': 29, 'min_child_weight': np.float64(0.0911400611067913), 'learning_rate': np.float64(0.1431977847556564), 'subsample': np.float64(0.8502657332835217), 'colsample_bylevel': np.float64(0.9487584336581256), 'colsample_bytree': np.float64(0.897507270698415), 'reg_alpha': np.float64(0.0015357064560870461), 'reg_lambda': np.float64(10.719007022446982)}
+13:23:47 | INFO    | [flaml_automl] PR-AUC=0.1490 ROC-AUC=0.6472 Brier=0.0866 recall@10%=0.183  fit=300.7s predict=0.10s
+13:23:47 | INFO    | wrote leaderboard → reports\v2_leaderboard.csv
+13:23:47 | INFO    | wrote curves → reports\v2_curves.npz
+13:23:47 | INFO    | 
+          name   display_name   pr_auc  roc_auc    brier  log_loss  recall_at_top10  precision_at_top10      n  n_pos  fit_time_s  predict_time_s
+           mlp    PyTorch MLP 0.157346 0.666478 0.217422  0.617368         0.195130            0.188016 198597  19136   15.662051        0.138081
+ft_transformer FT-Transformer 0.153375 0.661942 0.216332  0.615131         0.186089            0.179305 198597  19136 1216.884562       59.193476
+        tabnet         TabNet 0.153214 0.661995 0.084697  0.302669         0.184574            0.177845 198597  19136   29.703311        3.059831
+  flaml_automl   FLAML AutoML 0.149015 0.647222 0.086625  0.316426         0.182901            0.176234 198597  19136  300.670846        0.102522
+
+Early stopping occurred at epoch 9 with best_epoch = 4 and best_val_0_auc = 0.66543

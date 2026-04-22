@@ -1,0 +1,7 @@
+13:16:10 | INFO    | LIME high rank=0  score=0.3547 → high_risk_0.html
+13:16:10 | INFO    | LIME high rank=1  score=0.3400 → high_risk_1.html
+13:16:10 | INFO    | LIME high rank=2  score=0.3357 → high_risk_2.html
+13:16:10 | INFO    | LIME low  rank=0  score=0.0028 → low_risk_0.html
+13:16:10 | INFO    | LIME low  rank=1  score=0.0030 → low_risk_1.html
+13:16:10 | INFO    | LIME low  rank=2  score=0.0032 → low_risk_2.html
+13:16:10 | INFO    | LIME complete — 6 explanations × 10 features each

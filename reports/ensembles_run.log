@@ -1,0 +1,18 @@
+C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\mlflow\tracking\_tracking_service\utils.py:184: FutureWarning: The filesystem tracking backend (e.g., './mlruns') is deprecated as of February 2026. Consider transitioning to a database backend (e.g., 'sqlite:///mlflow.db') to take advantage of the latest MLflow features. See https://mlflow.org/docs/latest/self-hosting/migrate-from-file-store for migration guidance.
+  return FileStore(store_uri, store_uri)
+13:09:35 | INFO    | loaded base scores — shape (198597, 3)  base learners ['xgboost', 'catboost', 'hist_gradient_boosting']
+13:09:35 | INFO    | base correlations:
+                        xgboost  catboost  hist_gradient_boosting
+xgboost                   1.000     0.995                   0.994
+catboost                  0.995     1.000                   0.993
+hist_gradient_boosting    0.994     0.993                   1.000
+13:09:35 | INFO    | calib n=99043  test n=99554
+13:09:37 | INFO    | wrote leaderboard → reports\ensembles_summary.csv  (rows=5)
+13:09:37 | INFO    | wrote curves → reports\ensembles_curves.npz
+13:09:37 | INFO    | 
+                       name   pr_auc  roc_auc    brier  log_loss  recall_at_top10  precision_at_top10     n  n_pos  fit_time_s  predict_time_s  meta_intercept                                                                                                     meta_coef
+       ensemble/voting_mean 0.171983 0.687645 0.083487  0.296754         0.211826            0.203315 99554   9555    0.000000        0.001001             NaN                                                                                                           NaN
+       ensemble/stacking_lr 0.171982 0.687648 0.083694  0.298204         0.211931            0.203415 99554   9555    0.067042        0.000000       -3.419309 {"xgboost": 3.6750462263038304, "catboost": 3.6008932666416733, "hist_gradient_boosting": 3.5501715741574578}
+              base/catboost 0.171910 0.687555 0.083489  0.296788         0.212977            0.204420 99554   9555         NaN             NaN             NaN                                                                                                           NaN
+               base/xgboost 0.171866 0.687572 0.083490  0.296740         0.211198            0.202712 99554   9555         NaN             NaN             NaN                                                                                                           NaN
+base/hist_gradient_boosting 0.171312 0.686847 0.083518  0.296945         0.212454            0.203918 99554   9555         NaN             NaN             NaN                                                                                                           NaN

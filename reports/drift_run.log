@@ -1,0 +1,55 @@
+13:12:51 | INFO    | loading reference (train) and current (val) cohorts
+13:12:51 | INFO    | reference rows=50000  current rows=50000  features=29
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\src\readmit_bench\drift\evidently_report.py", line 101, in <module>
+    main()
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\src\readmit_bench\drift\evidently_report.py", line 97, in main
+    run(features_path=args.features, html_out=args.html_out, json_out=args.json_out, sample=args.sample)
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\src\readmit_bench\drift\evidently_report.py", line 62, in run
+    snapshot = report.run(reference_data=ref, current_data=cur)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\core\report.py", line 964, in run
+    snapshot.run(current_dataset, reference_dataset, additional_datasets)
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\core\report.py", line 578, in run
+    self._snapshot_item, self._widgets = self._run_items(self.report.items(), self._metrics)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\core\report.py", line 557, in _run_items
+    container_items, container_widgets = self._run_items(item.metrics(self.context), metric_results)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\core\report.py", line 563, in _run_items
+    metric_results[calc.id] = self.context.calculate_metric(calc)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\core\report.py", line 208, in calculate_metric
+    current_result, reference_result = calc.call(self)
+                                       ^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\core\metric_types.py", line 962, in call
+    result = self.calculate(context, *context._input_data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\metrics\_legacy.py", line 42, in calculate
+    result, render = context.get_legacy_metric(self.legacy_metric(), self._gen_input_data, self.task_name())
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\core\report.py", line 300, in get_legacy_metric
+    result = metric.calculate(input_data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\legacy\metrics\data_integrity\dataset_summary_metric.py", line 169, in calculate
+    current = self._calculate_dataset_common_stats(data.current_data, data.column_mapping)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\legacy\metrics\data_integrity\dataset_summary_metric.py", line 152, in _calculate_dataset_common_stats
+    number_of_almost_duplicated_columns=get_number_of_almost_duplicated_columns(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\evidently\legacy\calculations\data_integration.py", line 47, in get_number_of_almost_duplicated_columns
+    score = dataset[column_name_1].eq(dataset[column_name_2]).sum() / all_rows
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\pandas\core\series.py", line 6291, in eq
+    return self._flex_method(
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\pandas\core\series.py", line 6267, in _flex_method
+    return self._binop(other, op, level=level, fill_value=fill_value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HaMMaDy\jupyter\ML_2026\readmit-bench\venv\Lib\site-packages\pandas\core\series.py", line 6216, in _binop
+    result = func(this_vals, other_vals)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas/_libs/missing.pyx", line 392, in pandas._libs.missing.NAType.__bool__
+TypeError: boolean value of NA is ambiguous

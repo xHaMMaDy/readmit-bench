@@ -1,0 +1,199 @@
+Metadata-Version: 2.4
+Name: readmit-bench
+Version: 0.1.0
+Summary: Senior ML Engineer portfolio: end-to-end healthcare ML pipeline on CMS DE-SynPUF (30-day readmission).
+Author-email: HaMMaDy <xhammady@users.noreply.github.com>
+License: MIT
+Project-URL: Homepage, https://github.com/xHaMMaDy/readmit-bench
+Project-URL: Repository, https://github.com/xHaMMaDy/readmit-bench
+Keywords: machine-learning,healthcare,readmission,mlops,fairness,shap
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: <3.13,>=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=1.26
+Requires-Dist: pandas>=2.2
+Requires-Dist: polars>=1.0
+Requires-Dist: pyarrow>=15
+Requires-Dist: scikit-learn>=1.4
+Requires-Dist: scipy>=1.12
+Requires-Dist: matplotlib>=3.8
+Requires-Dist: seaborn>=0.13
+Requires-Dist: plotly>=5.20
+Requires-Dist: joblib>=1.3
+Requires-Dist: tqdm>=4.66
+Requires-Dist: requests>=2.31
+Requires-Dist: pydantic>=2.6
+Provides-Extra: ml
+Requires-Dist: xgboost>=2.0; extra == "ml"
+Requires-Dist: lightgbm>=4.3; extra == "ml"
+Requires-Dist: catboost>=1.2; extra == "ml"
+Requires-Dist: optuna>=3.6; extra == "ml"
+Requires-Dist: mlflow>=2.13; extra == "ml"
+Requires-Dist: shap>=0.45; extra == "ml"
+Requires-Dist: lime>=0.2.0.1; extra == "ml"
+Requires-Dist: fairlearn>=0.10; extra == "ml"
+Requires-Dist: category-encoders>=2.6; extra == "ml"
+Requires-Dist: imbalanced-learn>=0.12; extra == "ml"
+Requires-Dist: evidently>=0.4; extra == "ml"
+Requires-Dist: flaml[automl]>=2.1; extra == "ml"
+Provides-Extra: nn
+Requires-Dist: torch>=2.2; extra == "nn"
+Requires-Dist: pytorch-tabnet>=4.1; extra == "nn"
+Provides-Extra: api
+Requires-Dist: fastapi>=0.110; extra == "api"
+Requires-Dist: uvicorn[standard]>=0.29; extra == "api"
+Requires-Dist: jinja2>=3.1; extra == "api"
+Requires-Dist: python-multipart>=0.0.9; extra == "api"
+Requires-Dist: streamlit>=1.33; extra == "api"
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: pytest-cov>=5.0; extra == "dev"
+Requires-Dist: black>=24.3; extra == "dev"
+Requires-Dist: ruff>=0.4; extra == "dev"
+Requires-Dist: mypy>=1.9; extra == "dev"
+Requires-Dist: pre-commit>=3.7; extra == "dev"
+Requires-Dist: ipykernel>=6.29; extra == "dev"
+Requires-Dist: jupyter>=1.0; extra == "dev"
+Requires-Dist: nbformat>=5.10; extra == "dev"
+Dynamic: license-file
+
+# 🏥 readmit-bench — 30-Day Hospital Readmission Prediction
+
+> **Senior ML Engineer portfolio project** — End-to-end healthcare ML pipeline on **CMS DE-SynPUF** synthetic Medicare claims. Demonstrates the full lifecycle: data engineering at scale, classical + modern modeling, hyperparameter tuning, calibration, fairness audit, explainability, FastAPI deployment, CI/CD, and responsible-AI documentation.
+
+[![CI](https://github.com/xHaMMaDy/readmit-bench/actions/workflows/ci.yml/badge.svg)](https://github.com/xHaMMaDy/readmit-bench/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+🚧 **Status: under active development.** V1 milestone (deployable model + API) is the current target.
+
+---
+
+## 📊 Project at a Glance
+
+| | |
+|---|---|
+| **Task** | Binary classification — 30-day unplanned hospital readmission |
+| **Dataset** | CMS DE-SynPUF (20 samples ≈ 1.33M inpatient encounters, ~752K beneficiaries) |
+| **Primary metric** | PR-AUC (heavily imbalanced, ~9.6% positive) |
+| **Models benchmarked** | 6 in V1 (LR, RF, ExtraTrees, HistGB, XGBoost, LightGBM, CatBoost), 12+ in V2 |
+| **Stack** | scikit-learn, XGBoost/LightGBM/CatBoost, Optuna, MLflow, SHAP, Fairlearn, FastAPI, Docker, HF Spaces, GitHub Actions |
+| **Live demo** | _(coming after Phase 10)_ |
+
+---
+
+## 🎯 Why This Project
+
+Most ML portfolios use Iris or Titanic. This one operates on **multi-million-row real healthcare claims** and walks through every step a senior ML engineer is expected to do:
+
+1. Honest data acquisition (no Kaggle CSV — directly from CMS)
+2. Encounter-level cohort selection with explicit leakage policy
+3. 30-day readmission label engineered from longitudinal claim sequences
+4. Reproducible feature pipeline (Polars → parquet → sklearn ColumnTransformer)
+5. Benchmark across classical + boosted + neural models
+6. Bayesian hyperparameter tuning (Optuna)
+7. Probability calibration + business-cost-driven threshold selection
+8. Global + local explainability (SHAP, LIME, permutation)
+9. Subgroup fairness audit (Fairlearn) with mitigation experiment
+10. Drift monitoring (Evidently)
+11. Production FastAPI service + Streamlit demo on HuggingFace Spaces
+12. CI (GitHub Actions), pre-commit hooks, type checking, unit tests
+13. Model card (responsible AI documentation)
+
+---
+
+## 🗂️ Repo Structure
+
+```
+readmit-bench/
+├─ src/readmit_bench/             # Production package (importable, tested)
+│  ├─ data/                       # Acquisition + cohort + label engineering
+│  ├─ features/                   # Feature pipeline
+│  ├─ models/                     # Model wrappers + training loops
+│  ├─ evaluation/                 # Metrics, curves, calibration
+│  ├─ explainability/             # SHAP, LIME, permutation
+│  ├─ fairness/                   # Fairlearn audit + mitigation
+│  ├─ drift/                      # Evidently drift reports
+│  └─ api/                        # FastAPI app + Pydantic schemas
+├─ notebooks/                     # Storytelling notebooks (import from src)
+├─ tests/                         # pytest unit + smoke tests
+├─ data/                          # raw + processed (gitignored)
+├─ models/                        # saved artifacts (gitignored)
+├─ mlruns/                        # MLflow local store (gitignored)
+├─ reports/                       # Generated plots, HTML report, model card
+├─ deploy/                        # Dockerfile + HF Spaces config
+├─ .github/workflows/             # CI
+├─ CONTRACT.md                    # Frozen design decisions (read FIRST)
+├─ MODEL_CARD.md                  # Responsible AI documentation
+└─ pyproject.toml
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.10–3.12
+- ~15 GB free disk space (for data + models + MLflow)
+- Windows, macOS, or Linux
+
+### Setup
+```bash
+git clone https://github.com/xHaMMaDy/readmit-bench.git
+cd readmit-bench
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+pip install -e ".[dev,ml,api]"
+pre-commit install
+```
+
+### Get the data
+```bash
+python -m readmit_bench.data.download --samples 5
+```
+
+### Run the pipeline
+```bash
+python -m readmit_bench.data.cohort
+python -m readmit_bench.features.build
+python -m readmit_bench.models.train_baselines
+python -m readmit_bench.models.tune
+```
+
+### Launch the API
+```bash
+uvicorn readmit_bench.api.main:app --reload
+# Open http://127.0.0.1:8000
+```
+
+---
+
+## 📈 Benchmark Results (V1 — placeholder, will be filled after Phase 5)
+
+| Model | PR-AUC | ROC-AUC | Brier | Recall@P=0.30 | Train time |
+|---|---|---|---|---|---|
+| Logistic Regression | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ |
+| Random Forest | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ |
+| ExtraTrees | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ |
+| HistGradientBoosting | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ |
+| XGBoost | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ |
+| LightGBM | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ |
+| CatBoost | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ |
+
+---
+
+## 📜 License
+
+MIT — see [LICENSE](LICENSE).
+
+## 👤 Author
+
+**HaMMaDy** — [github.com/xHaMMaDy](https://github.com/xHaMMaDy)
+Available for senior ML engineering work on Upwork.
