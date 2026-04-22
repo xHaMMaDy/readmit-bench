@@ -36,7 +36,6 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import joblib
-import mlflow
 import numpy as np
 import pandas as pd
 import polars as pl
@@ -231,6 +230,8 @@ def run_pipeline(
     seed: int = RANDOM_STATE,
 ) -> dict:
     """End-to-end Phase-7 routine. Returns a small dict for the caller / tests."""
+    import mlflow
+    
     t0 = time.time()
     mlflow.set_tracking_uri(mlruns_dir.resolve().as_uri())
     mlflow.set_experiment(EXPERIMENT)
