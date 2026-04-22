@@ -12,6 +12,14 @@
 
 ✅ **Status: V2 shipped (`v2.0`).** End-to-end pipeline complete: tuned & calibrated XGBoost served by both a **FastAPI** REST API and a **Flask clinician dashboard**, with NN/AutoML/ensemble benchmarks (honest negative results), fairness audit, drift monitoring, blog report, and architecture docs. See the **[blog-style project report](reports/report.html)** for the narrative walkthrough.
 
+## 🚀 Live Deployments
+
+| Service | Platform | Link |
+|---|---|---|
+| **Flask Dashboard** | Hugging Face Spaces | https://huggingface.co/spaces/Hammady1/readmit-bench |
+| **FastAPI Service** | Hugging Face Spaces | https://huggingface.co/spaces/Hammady1/readmit-bench-api |
+| **One-Click Deploy** | Render | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/xHaMMaDy/readmit-bench) |
+
 > **Demo** — animated walkthrough of the dashboard scoring an encounter:
 > ![dashboard demo](reports/demo.gif)
 
