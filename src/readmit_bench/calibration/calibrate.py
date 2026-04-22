@@ -38,7 +38,6 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
-import polars as pl
 from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
@@ -79,6 +78,8 @@ class CalibrationResult:
 
 
 def _load_val(features_path: Path) -> tuple[pd.DataFrame, np.ndarray, np.ndarray]:
+    import polars as pl
+    
     spec = FeatureSpec()
     df = pl.read_parquet(features_path).filter(pl.col("split") == "val")
     cols = list(spec.all_features())
