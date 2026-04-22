@@ -24,10 +24,10 @@ import pandas as pd
 
 from readmit_bench.calibration import calibrate as _calibrate
 from readmit_bench.features.pipeline import (
-    BINARY_COLS,
     CAT_HIGHCARD_COLS,
     CAT_LOWCARD_COLS,
     NUMERIC_COLS,
+    _get_binary_cols,
 )
 
 # The calibrator was pickled while ``calibrate.py`` was executing as ``__main__``,
@@ -46,12 +46,19 @@ DEFAULT_WINNER_THRESHOLD = DEFAULT_MODELS_DIR / "winner_threshold.json"
 DEFAULT_CALIBRATOR = DEFAULT_MODELS_DIR / "winner_calibrator.joblib"
 DEFAULT_TUNED_DIR = DEFAULT_MODELS_DIR / "tuned"
 
-FEATURE_ORDER: tuple[str, ...] = (
-    *NUMERIC_COLS,
-    *BINARY_COLS,
-    *CAT_LOWCARD_COLS,
-    *CAT_HIGHCARD_COLS,
-)
+
+def get_feature_order() -> tuple[str, ...]:
+    """Lazy-load FEATURE_ORDER to avoid polars import during serving."""
+    return (
+        *NUMERIC_COLS,
+        *_get_binary_cols(),
+        *CAT_LOWCARD_COLS,
+        *CAT_HIGHCARD_COLS,
+    )
+
+
+# For backward compatibility with code that accesses FEATURE_ORDER directly
+FEATURE_ORDER: tuple[str, ...] | None = None
 
 
 def _risk_band(p: float) -> str:

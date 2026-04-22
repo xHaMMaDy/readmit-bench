@@ -8,15 +8,6 @@ from .pipeline import (
     FeatureSpec,
     build_preprocessor,
 )
-from .split import (
-    DEFAULT_SEED,
-    DEFAULT_TEST_SIZE,
-    DEFAULT_VAL_SIZE,
-    SplitReport,
-    assign_splits,
-    summarise_split,
-    write_split_assignments,
-)
 
 # Lazy imports for polars-dependent modules (training-only)
 def __getattr__(name: str):
@@ -26,6 +17,27 @@ def __getattr__(name: str):
     elif name == "add_derived_features":
         from .derive import add_derived_features
         return add_derived_features
+    elif name == "DEFAULT_SEED":
+        from .split import DEFAULT_SEED
+        return DEFAULT_SEED
+    elif name == "DEFAULT_TEST_SIZE":
+        from .split import DEFAULT_TEST_SIZE
+        return DEFAULT_TEST_SIZE
+    elif name == "DEFAULT_VAL_SIZE":
+        from .split import DEFAULT_VAL_SIZE
+        return DEFAULT_VAL_SIZE
+    elif name == "SplitReport":
+        from .split import SplitReport
+        return SplitReport
+    elif name == "assign_splits":
+        from .split import assign_splits
+        return assign_splits
+    elif name == "summarise_split":
+        from .split import summarise_split
+        return summarise_split
+    elif name == "write_split_assignments":
+        from .split import write_split_assignments
+        return write_split_assignments
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 __all__ = [

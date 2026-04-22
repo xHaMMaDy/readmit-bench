@@ -25,8 +25,6 @@ from sklearn.preprocessing import (
     TargetEncoder,
 )
 
-from .derive import CHRONIC_COLS
-
 NUMERIC_COLS: tuple[str, ...] = (
     "los_days",
     "age_at_admit",
@@ -39,11 +37,18 @@ NUMERIC_COLS: tuple[str, ...] = (
     "admit_dow",
 )
 
-BINARY_COLS: tuple[str, ...] = (
-    "is_weekend_admit",
-    "has_prior_admit",
-    *CHRONIC_COLS,
-)
+
+def _get_binary_cols() -> tuple[str, ...]:
+    """Lazy-load CHRONIC_COLS to avoid polars import during serving."""
+    from .derive import CHRONIC_COLS
+    return (
+        "is_weekend_admit",
+        "has_prior_admit",
+        *CHRONIC_COLS,
+    )
+
+
+BINARY_COLS: tuple[str, ...] = None  # Will be computed on first access
 
 CAT_LOWCARD_COLS: tuple[str, ...] = (
     "sex",
@@ -73,11 +78,15 @@ LABEL_COL = "y"
 @dataclass(frozen=True)
 class FeatureSpec:
     numeric: tuple[str, ...] = NUMERIC_COLS
-    binary: tuple[str, ...] = BINARY_COLS
+    binary: tuple[str, ...] = None  # Will be computed on first access
     cat_lowcard: tuple[str, ...] = CAT_LOWCARD_COLS
     cat_highcard: tuple[str, ...] = CAT_HIGHCARD_COLS
     id_cols: tuple[str, ...] = ID_COLS
     label: str = LABEL_COL
+
+    def __post_init__(self):
+        if self.binary is None:
+            object.__setattr__(self, 'binary', _get_binary_cols())
 
     def all_features(self) -> list[str]:
         return [

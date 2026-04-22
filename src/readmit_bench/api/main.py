@@ -20,7 +20,7 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 
-from readmit_bench.api.predictor import FEATURE_ORDER, Predictor
+from readmit_bench.api.predictor import get_feature_order, Predictor
 from readmit_bench.api.schemas import (
     BatchPredictRequest,
     BatchPredictResponse,
@@ -126,6 +126,7 @@ def health() -> HealthResponse:
 @app.get("/model_info", response_model=ModelInfo)
 def model_info() -> ModelInfo:
     pred = _get_predictor()
+    feature_order = get_feature_order()
     return ModelInfo(
         name=PROJECT_NAME,
         version=API_VERSION,
@@ -136,7 +137,7 @@ def model_info() -> ModelInfo:
         cost_fp_usd=pred.meta.cost_fp_usd,
         test_n=pred.meta.test_n,
         test_n_pos=pred.meta.test_n_pos,
-        feature_count=len(FEATURE_ORDER),
+        feature_count=len(feature_order),
     )
 
 
